@@ -1,3 +1,5 @@
+package ru.stqa.pft.homework2;
+
 class Point {
 
 	int x,y;
