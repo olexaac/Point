@@ -1,6 +1,5 @@
 package ru.stqa.pft.addressbook;
 
-import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import org.testng.annotations.*;
 import static org.testng.Assert.*;
@@ -20,29 +19,49 @@ public class ContactCreationTests {
     baseUrl = "http://localhost/";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     driver.get(baseUrl + "/addressbook/");
+    login("admin", "secret");
+  }
+
+  private void login(String username, String password) {
     driver.findElement(By.name("user")).clear();
-    driver.findElement(By.name("user")).sendKeys("admin");
+    driver.findElement(By.name("user")).sendKeys(username);
     driver.findElement(By.name("pass")).clear();
-    driver.findElement(By.name("pass")).sendKeys("secret");
+    driver.findElement(By.name("pass")).sendKeys(password);
     driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
   }
 
   @Test
   public void testContactCreation() throws Exception {
-    driver.findElement(By.linkText("add new")).click();
-    driver.findElement(By.name("firstname")).clear();
-    driver.findElement(By.name("firstname")).sendKeys("Ввсилиса");
-    driver.findElement(By.name("lastname")).clear();
-    driver.findElement(By.name("lastname")).sendKeys("Пупкина");
-    driver.findElement(By.name("mobile")).clear();
-    driver.findElement(By.name("mobile")).sendKeys("111111");
-    driver.findElement(By.name("email")).clear();
-    driver.findElement(By.name("email")).sendKeys("jhgdkfjhgkd@fgjhkd.cv");
-    new Select(driver.findElement(By.name("bday"))).selectByVisibleText("1");
-    new Select(driver.findElement(By.name("bmonth"))).selectByVisibleText("January");
-    driver.findElement(By.name("byear")).clear();
-    driver.findElement(By.name("byear")).sendKeys("1980");
+    gotoContactPage();
+    fillContactForm("Ввсилиса", "Пупкина", "111111", "jhgdkfjhgkd@fgjhkd.cv");
+    submitContactCreation();
+  }
+
+  private void submitContactCreation() {
     driver.findElement(By.xpath("(//input[@name='submit'])[2]")).click();
+  }
+
+  private void fillContactForm(String name, String last, String mob, String mail) {
+    fillContactForm(new ContactData(name, last, mob, mail, "1", "January", "1980"));
+  }
+
+  private void fillContactForm(ContactData contactData) {
+    driver.findElement(By.name("firstname")).clear();
+    driver.findElement(By.name("firstname")).sendKeys(contactData.getName());
+    driver.findElement(By.name("lastname")).clear();
+    driver.findElement(By.name("lastname")).sendKeys(contactData.getLast());
+    driver.findElement(By.name("mobile")).clear();
+    driver.findElement(By.name("mobile")).sendKeys(contactData.getMob());
+    driver.findElement(By.name("email")).clear();
+    driver.findElement(By.name("email")).sendKeys(contactData.getMail());
+    new Select(driver.findElement(By.name("bday"))).selectByVisibleText(contactData.getDay());
+    new Select(driver.findElement(By.name("bmonth"))).selectByVisibleText(contactData.getMonth());
+    driver.findElement(By.name("byear")).clear();
+    driver.findElement(By.name("byear")).sendKeys(contactData.getYear());
+  }
+
+  private void gotoContactPage() {
+    driver.findElement(By.linkText("add new")).click();
   }
 
   @AfterClass(alwaysRun = true)
