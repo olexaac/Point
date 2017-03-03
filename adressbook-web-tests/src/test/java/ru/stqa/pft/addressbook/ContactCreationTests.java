@@ -19,30 +19,30 @@ public class ContactCreationTests {
     driver = new FirefoxDriver();
     baseUrl = "http://localhost/";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-  }
-
-  @Test
-  public void testContactCreationTests() throws Exception {
     driver.get(baseUrl + "/addressbook/");
     driver.findElement(By.name("user")).clear();
     driver.findElement(By.name("user")).sendKeys("admin");
     driver.findElement(By.name("pass")).clear();
     driver.findElement(By.name("pass")).sendKeys("secret");
     driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+  }
+
+  @Test
+  public void testContactCreation() throws Exception {
     driver.findElement(By.linkText("add new")).click();
     driver.findElement(By.name("firstname")).clear();
-    driver.findElement(By.name("firstname")).sendKeys("Василий");
+    driver.findElement(By.name("firstname")).sendKeys("Ввсилиса");
     driver.findElement(By.name("lastname")).clear();
-    driver.findElement(By.name("lastname")).sendKeys("Пупкин");
+    driver.findElement(By.name("lastname")).sendKeys("Пупкина");
     driver.findElement(By.name("mobile")).clear();
-    driver.findElement(By.name("mobile")).sendKeys("111");
+    driver.findElement(By.name("mobile")).sendKeys("111111");
     driver.findElement(By.name("email")).clear();
-    driver.findElement(By.name("email")).sendKeys("fgdfg@ghf.cv");
+    driver.findElement(By.name("email")).sendKeys("jhgdkfjhgkd@fgjhkd.cv");
     new Select(driver.findElement(By.name("bday"))).selectByVisibleText("1");
     new Select(driver.findElement(By.name("bmonth"))).selectByVisibleText("January");
     driver.findElement(By.name("byear")).clear();
     driver.findElement(By.name("byear")).sendKeys("1980");
-    // ERROR: Caught exception [Error: Dom locators are not implemented yet!]
+    driver.findElement(By.xpath("(//input[@name='submit'])[2]")).click();
   }
 
   @AfterClass(alwaysRun = true)
