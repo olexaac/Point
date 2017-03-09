@@ -1,108 +1,77 @@
 package ru.stqa.pft.addressbook;
 
-import java.util.concurrent.TimeUnit;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
 import static org.testng.Assert.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
+
+import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.io.File;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.*;
+import static org.openqa.selenium.OutputType.*;
 
 public class ContactCreationTests {
-  private WebDriver driver;
-  private String baseUrl;
-  private boolean acceptNextAlert = true;
-  private StringBuffer verificationErrors = new StringBuffer();
-
-  @BeforeClass(alwaysRun = true)
-  public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    baseUrl = "http://localhost/";
-    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-    driver.get(baseUrl + "/addressbook/");
-    login("admin", "secret");
-  }
-
-  private void login(String username, String password) {
-    driver.findElement(By.name("user")).clear();
-    driver.findElement(By.name("user")).sendKeys(username);
-    driver.findElement(By.name("pass")).clear();
-    driver.findElement(By.name("pass")).sendKeys(password);
-    driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
-  }
-
-  @Test
-  public void testContactCreation() throws Exception {
-    gotoContactPage();
-    fillContactForm("Ввсилиса", "Пупкина", "111111", "jhgdkfjhgkd@fgjhkd.cv");
-    submitContactCreation();
-  }
-
-  private void submitContactCreation() {
-    driver.findElement(By.xpath("(//input[@name='submit'])[2]")).click();
-  }
-
-  private void fillContactForm(String name, String last, String mob, String mail) {
-    fillContactForm(new ContactData(name, last, mob, mail, "1", "January", "1980"));
-  }
-
-  private void fillContactForm(ContactData contactData) {
-    driver.findElement(By.name("firstname")).clear();
-    driver.findElement(By.name("firstname")).sendKeys(contactData.getName());
-    driver.findElement(By.name("lastname")).clear();
-    driver.findElement(By.name("lastname")).sendKeys(contactData.getLast());
-    driver.findElement(By.name("mobile")).clear();
-    driver.findElement(By.name("mobile")).sendKeys(contactData.getMob());
-    driver.findElement(By.name("email")).clear();
-    driver.findElement(By.name("email")).sendKeys(contactData.getMail());
-    new Select(driver.findElement(By.name("bday"))).selectByVisibleText(contactData.getDay());
-    new Select(driver.findElement(By.name("bmonth"))).selectByVisibleText(contactData.getMonth());
-    driver.findElement(By.name("byear")).clear();
-    driver.findElement(By.name("byear")).sendKeys(contactData.getYear());
-  }
-
-  private void gotoContactPage() {
-    driver.findElement(By.linkText("add new")).click();
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void tearDown() throws Exception {
-    driver.quit();
-    String verificationErrorString = verificationErrors.toString();
-    if (!"".equals(verificationErrorString)) {
-      fail(verificationErrorString);
+    FirefoxDriver wd;
+    
+    @BeforeMethod
+    public void setUp() throws Exception {
+        wd = new FirefoxDriver();
+        wd.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
     }
-  }
-
-  private boolean isElementPresent(By by) {
-    try {
-      driver.findElement(by);
-      return true;
-    } catch (NoSuchElementException e) {
-      return false;
+    
+    @Test
+    public void testContactCreation() {
+        wd.get("http://localhost/addressbook/edit.php");
+        wd.findElement(By.name("user")).click();
+        wd.findElement(By.name("user")).clear();
+        wd.findElement(By.name("user")).sendKeys("admin");
+        wd.findElement(By.name("pass")).click();
+        wd.findElement(By.name("pass")).clear();
+        wd.findElement(By.name("pass")).sendKeys("secret");
+        wd.findElement(By.xpath("//form[@id='LoginForm']/input[3]")).click();
+        wd.findElement(By.name("firstname")).click();
+        wd.findElement(By.name("firstname")).clear();
+        wd.findElement(By.name("firstname")).sendKeys("Василий");
+        wd.findElement(By.name("lastname")).click();
+        wd.findElement(By.name("lastname")).clear();
+        wd.findElement(By.name("lastname")).sendKeys("Пупкин");
+        wd.findElement(By.name("address")).click();
+        wd.findElement(By.name("address")).clear();
+        wd.findElement(By.name("address")).sendKeys("Москва");
+        wd.findElement(By.name("mobile")).click();
+        wd.findElement(By.name("mobile")).clear();
+        wd.findElement(By.name("mobile")).sendKeys("1111");
+        wd.findElement(By.name("email")).click();
+        wd.findElement(By.name("email")).clear();
+        wd.findElement(By.name("email")).sendKeys("dfdfs@gdfg.cv");
+        if (!wd.findElement(By.xpath("//div[@id='content']/form/select[1]//option[3]")).isSelected()) {
+            wd.findElement(By.xpath("//div[@id='content']/form/select[1]//option[3]")).click();
+        }
+        if (!wd.findElement(By.xpath("//div[@id='content']/form/select[2]//option[2]")).isSelected()) {
+            wd.findElement(By.xpath("//div[@id='content']/form/select[2]//option[2]")).click();
+        }
+        wd.findElement(By.name("byear")).click();
+        wd.findElement(By.name("byear")).clear();
+        wd.findElement(By.name("byear")).sendKeys("1980");
+        wd.findElement(By.xpath("//div[@id='content']/form/input[21]")).click();
+        wd.findElement(By.linkText("home page")).click();
     }
-  }
-
-  private boolean isAlertPresent() {
-    try {
-      driver.switchTo().alert();
-      return true;
-    } catch (NoAlertPresentException e) {
-      return false;
+    
+    @AfterMethod
+    public void tearDown() {
+        wd.quit();
     }
-  }
-
-  private String closeAlertAndGetItsText() {
-    try {
-      Alert alert = driver.switchTo().alert();
-      String alertText = alert.getText();
-      if (acceptNextAlert) {
-        alert.accept();
-      } else {
-        alert.dismiss();
-      }
-      return alertText;
-    } finally {
-      acceptNextAlert = true;
+    
+    public static boolean isAlertPresent(FirefoxDriver wd) {
+        try {
+            wd.switchTo().alert();
+            return true;
+        } catch (NoAlertPresentException e) {
+            return false;
+        }
     }
-  }
 }
