@@ -7,11 +7,10 @@ import ru.stqa.pft.addressbook.model.ContactData;
 /**
  * Created by Админ on 10.03.2017.
  */
-public class ContactHelper {
-  private FirefoxDriver wd;
+public class ContactHelper extends HelperBase {
 
   public ContactHelper(FirefoxDriver wd) {
-    this.wd = wd;
+    super(wd);
   }
 
   public void returnToContactPage() {
@@ -22,7 +21,7 @@ public class ContactHelper {
     click(By.xpath("//div[@id='content']/form/input[21]"));
   }
 
-  private void click(By locator) {
+  public void click(By locator) {
     wd.findElement(locator).click();
   }
 
@@ -41,7 +40,7 @@ public class ContactHelper {
     type(By.name("byear"), contactData.getYear());
   }
 
-  private void type(By locator, String text) {
+  public void type(By locator, String text) {
     click(locator);
     wd.findElement(locator).clear();
     wd.findElement(locator).sendKeys(text);
