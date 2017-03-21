@@ -15,41 +15,39 @@ public class ContactHelper {
   }
 
   public void returnToContactPage() {
-      wd.findElement(By.linkText("home page")).click();
+    click(By.linkText("home page"));
   }
 
   public void submitContactCreation() {
-      wd.findElement(By.xpath("//div[@id='content']/form/input[21]")).click();
+    click(By.xpath("//div[@id='content']/form/input[21]"));
+  }
+
+  private void click(By locator) {
+    wd.findElement(locator).click();
   }
 
   public void fillContactForm(ContactData contactData) {
-      wd.findElement(By.name("firstname")).click();
-      wd.findElement(By.name("firstname")).clear();
-      wd.findElement(By.name("firstname")).sendKeys(contactData.getFname());
-      wd.findElement(By.name("lastname")).click();
-      wd.findElement(By.name("lastname")).clear();
-      wd.findElement(By.name("lastname")).sendKeys(contactData.getLname());
-      wd.findElement(By.name("address")).click();
-      wd.findElement(By.name("address")).clear();
-      wd.findElement(By.name("address")).sendKeys(contactData.getCity());
-      wd.findElement(By.name("mobile")).click();
-      wd.findElement(By.name("mobile")).clear();
-      wd.findElement(By.name("mobile")).sendKeys(contactData.getMob());
-      wd.findElement(By.name("email")).click();
-      wd.findElement(By.name("email")).clear();
-      wd.findElement(By.name("email")).sendKeys(contactData.getEmail());
+    type(By.name("firstname"), contactData.getFname());
+    type(By.name("lastname"), contactData.getLname());
+    type(By.name("address"), contactData.getCity());
+    type(By.name("mobile"), contactData.getMob());
+    type(By.name("email"), contactData.getEmail());
       if (!wd.findElement(By.xpath("//div[@id='content']/form/select[1]//option[3]")).isSelected()) {
-          wd.findElement(By.xpath("//div[@id='content']/form/select[1]//option[3]")).click();
+        click(By.xpath("//div[@id='content']/form/select[1]//option[3]"));
       }
       if (!wd.findElement(By.xpath("//div[@id='content']/form/select[2]//option[2]")).isSelected()) {
-          wd.findElement(By.xpath("//div[@id='content']/form/select[2]//option[2]")).click();
+        click(By.xpath("//div[@id='content']/form/select[2]//option[2]"));
       }
-      wd.findElement(By.name("byear")).click();
-      wd.findElement(By.name("byear")).clear();
-      wd.findElement(By.name("byear")).sendKeys(contactData.getYear());
+    type(By.name("byear"), contactData.getYear());
+  }
+
+  private void type(By locator, String text) {
+    click(locator);
+    wd.findElement(locator).clear();
+    wd.findElement(locator).sendKeys(text);
   }
 
   public void initContactCreation() {
-      wd.findElement(By.linkText("add new")).click();
+    click(By.linkText("add new"));
   }
 }
