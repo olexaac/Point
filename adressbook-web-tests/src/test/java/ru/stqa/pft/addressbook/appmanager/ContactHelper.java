@@ -49,4 +49,25 @@ public class ContactHelper extends HelperBase {
   public void initContactCreation() {
     click(By.linkText("add new"));
   }
+
+  public void gotoContactPage() {
+    click(By.linkText("home"));
+    }
+
+  public void selectContact() {
+    click(By.name("selected[]"));
+  }
+
+  public void initContactModification() {
+    click(By.cssSelector("a[href^=\"edit.php?id\"]"));
+  }
+
+  public void updateContactModification() {
+    click(By.cssSelector("input[value=\"Update\"]"));
+  }
+
+  public void deleteSelectedContacts() {
+    click(By.cssSelector("input[value=\"Delete\"]"));
+  }
 }
+
