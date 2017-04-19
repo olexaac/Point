@@ -1,7 +1,10 @@
 package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 
 /**
@@ -25,12 +28,18 @@ public class ContactHelper extends HelperBase {
     wd.findElement(locator).click();
   }
 
-  public void fillContactForm(ContactData contactData) {
+  public void fillContactForm(ContactData contactData, boolean creation) {
     type(By.name("firstname"), contactData.getFname());
     type(By.name("lastname"), contactData.getLname());
     type(By.name("address"), contactData.getCity());
     type(By.name("mobile"), contactData.getMob());
     type(By.name("email"), contactData.getEmail());
+
+      if (creation) {
+        new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
+      } else {
+        Assert.assertFalse(isElementPresent(By.name("new_group")));
+      }
       if (!wd.findElement(By.xpath("//div[@id='content']/form/select[1]//option[3]")).isSelected()) {
         click(By.xpath("//div[@id='content']/form/select[1]//option[3]"));
       }
