@@ -75,5 +75,16 @@ public class ContactHelper extends HelperBase {
   public void deleteSelectedContacts() {
     click(By.cssSelector("input[value=\"Delete\"]"));
   }
+
+  public void createContact(ContactData contact, boolean b) {
+    initContactCreation();
+    fillContactForm(contact, true);
+    submitContactCreation();
+    returnToContactPage();
+  }
+
+  public boolean isThereAContact() {
+    return isElementPresent(By.name("selected[]"));
+  }
 }
 
